@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { GameContext } from '../context/GameContext';
 import { useGame } from '../context/useGame';
 
-const MatchWinnerDisplay = ({ isOpen, onClose }) => {
-  const { matchHistory } = useGame();
+const MatchWinnerDisplay = ({ isOpen }) => {
+  const { matchHistory, players } = useGame();
+  const { resetMatch } = useContext(GameContext);
 
   if (!isOpen) return null;
 
@@ -15,6 +17,16 @@ const MatchWinnerDisplay = ({ isOpen, onClose }) => {
         <h3>{winner} has won the match!</h3>
         <div className="match-summary">
           <div className="title">Match Summary</div>
+          <div className="final-scores">
+            <div className="scores">
+              {players.map((player, index) => (
+                <div key={index}>
+                  {player.name}: <br />
+                  {player.score} / {player.race}
+                </div>
+              ))}
+            </div>
+          </div>
           {matchHistory.map((game) => (
             <div key={game.game} className="game-summary">
               <div className="game-winner">
@@ -28,7 +40,7 @@ const MatchWinnerDisplay = ({ isOpen, onClose }) => {
           ))}
         </div>
         <br />
-        <button onClick={onClose}>Close</button>
+        <button onClick={resetMatch}>Play Again</button>
       </div>
     </div>
   );

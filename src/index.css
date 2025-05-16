@@ -206,6 +206,12 @@ select {
   font-weight: 700;
   margin-bottom: 10px;
 }
+.match-summary .scores {
+  display: flex;
+  justify-content: center;
+  gap: 100px;
+  margin-bottom: 15px;
+}
 .match-summary .game-summary {
   margin-bottom: 10px;
 }

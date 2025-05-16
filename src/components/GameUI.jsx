@@ -103,7 +103,7 @@ const GameUI = () => {
         <button onClick={resetMatch}>Reset Match</button>
       </div>
       {showGameOverModal && <GameEndModal isOpen={showGameOverModal} onClose={() => setShowGameOverModal(false)} onMatchEnd={() => setShowMatchWinnerModal(true)} />}
-      {showMatchWinnerModal && <MatchWinnerDisplay isOpen={showMatchWinnerModal} onClose={() => setShowMatchWinnerModal(false)} />}
+      {showMatchWinnerModal && <MatchWinnerDisplay isOpen={showMatchWinnerModal} />}
     </>
   );
 };
