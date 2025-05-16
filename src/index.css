@@ -186,7 +186,7 @@ select {
   background: #242424;
   padding: 2rem;
   border-radius: 1rem;
-  max-width: 400px;
+  width: 80%;
   text-align: center;
 }
 
@@ -194,4 +194,29 @@ select {
   display: block;
   width: 100%;
   margin: 0.5rem 0;
+}
+
+/* Match End Modal */
+.modal.match-end h3 {
+  color: green;
+}
+.match-summary {
+}
+.match-summary .title {
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.match-summary .game-summary {
+  margin-bottom: 10px;
+}
+.match-summary .game-winner {
+  background: #213547;
+  font-size: 14px;
+}
+.match-summary .game-stats {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  font-size: 12px;
+  margin-top: 5px;
 }

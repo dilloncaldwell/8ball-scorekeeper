@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGame } from '../context/useGame';
 
-const GameEndModal = ({ isOpen, onClose }) => {
+const GameEndModal = ({ isOpen, onClose, onMatchEnd }) => {
   const {
     players,
     setPlayers,
@@ -58,8 +58,7 @@ const GameEndModal = ({ isOpen, onClose }) => {
     if (hasWonMatch) {
       // Entire match is over
       setGameEnded(true);
-      alert(`${winner.name} has won the match!`);
-      // You could add another modal here if you want
+      onMatchEnd();
     } else {
       // Start next game with this player as breaker and current turn
       setBreakerIndex(winnerIndex);

@@ -3,11 +3,13 @@ import { GameContext } from '../context/GameContext';
 import { useGame } from '../context/useGame';
 import GameEndModal from './GameEndModal';
 import InningTracker from './InningTracker';
+import MatchWinnerDisplay from './MatchWinnerDisplay';
 
 const GameUI = () => {
   const { players, currentTurn, setCurrentTurn, breakerIndex, setInnings, setCurrentInning, gameTimer, turnHistory, setTurnHistory } = useGame();
   const { resetMatch } = useContext(GameContext);
   const [showGameOverModal, setShowGameOverModal] = useState(false);
+  const [showMatchWinnerModal, setShowMatchWinnerModal] = useState(false);
 
   const switchTurn = () => {
     const next = currentTurn === 0 ? 1 : 0;
@@ -100,7 +102,8 @@ const GameUI = () => {
         <button onClick={undoTurn}>Undo Turn</button>
         <button onClick={resetMatch}>Reset Match</button>
       </div>
-      {showGameOverModal && <GameEndModal isOpen={showGameOverModal} onClose={() => setShowGameOverModal(false)} />}
+      {showGameOverModal && <GameEndModal isOpen={showGameOverModal} onClose={() => setShowGameOverModal(false)} onMatchEnd={() => setShowMatchWinnerModal(true)} />}
+      {showMatchWinnerModal && <MatchWinnerDisplay isOpen={showMatchWinnerModal} onClose={() => setShowMatchWinnerModal(false)} />}
     </>
   );
 };
