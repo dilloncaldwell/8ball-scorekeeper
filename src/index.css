@@ -92,13 +92,16 @@ h2 {
   flex-direction: column;
 }
 label {
-  display: inline-block;
+  display: block;
   margin-bottom: 5px;
   font-size: 14px;
 }
 input,
 select {
   padding: 5px 10px;
+}
+.input-error {
+  border: 1px solid red;
 }
 
 /* Game UI */

@@ -11,12 +11,14 @@ const MatchSetupForm = () => {
 
   const startMatch = () => {
     setPlayers([
-      { name: player1, race: parseInt(race1, 10), score: 0 },
-      { name: player2, race: parseInt(race2, 10), score: 0 },
+      { name: player1.trim(), race: parseInt(race1, 10), score: 0 },
+      { name: player2.trim(), race: parseInt(race2, 10), score: 0 },
     ]);
     setBreakerIndex(breaker);
     setGameStarted(true);
   };
+
+  const isFormValid = player1.trim() && player2.trim();
 
   return (
     <div>
@@ -25,24 +27,20 @@ const MatchSetupForm = () => {
         <div className="p1-form">
           <div>
             <label>Player 1 Name:</label>
-            <br />
             <input placeholder="Player 1 Name" value={player1} onChange={(e) => setPlayer1(e.target.value)} />
           </div>
           <div>
             <label>Race:</label>
-            <br />
             <input type="number" placeholder="Race" value={race1} onChange={(e) => setRace1(e.target.value)} />
           </div>
         </div>
         <div className="p2-form">
           <div>
             <label>Player 2 Name:</label>
-            <br />
             <input placeholder="Player 2 Name" value={player2} onChange={(e) => setPlayer2(e.target.value)} />
           </div>
           <div>
             <label>Race:</label>
-            <br />
             <input type="number" placeholder="Race" value={race2} onChange={(e) => setRace2(e.target.value)} />
           </div>
         </div>
@@ -50,12 +48,14 @@ const MatchSetupForm = () => {
       <div className="who-breaks">
         <label>Who breaks first?</label>
         <select value={breaker} onChange={(e) => setBreaker(parseInt(e.target.value, 10))}>
-          <option value={0}>Player 1</option>
-          <option value={1}>Player 2</option>
+          <option value={0}>{player1.trim() || 'Player 1'}</option>
+          <option value={1}>{player2.trim() || 'Player 2'}</option>
         </select>
       </div>
       <div className="btn-wrapper">
-        <button onClick={startMatch}>Start Match</button>
+        <button onClick={startMatch} disabled={!isFormValid}>
+          Start Match
+        </button>
       </div>
     </div>
   );

@@ -1,14 +1,8 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { GameContext } from '../context/GameContext';
 
 const InningTracker = () => {
-  const { innings, currentInning, setInnings, gameStarted } = useContext(GameContext);
-
-  useEffect(() => {
-    if (gameStarted && (innings.length === 0 || innings[innings.length - 1] !== currentInning)) {
-      setInnings([...innings, currentInning]);
-    }
-  }, [innings, currentInning, setInnings, gameStarted]);
+  const { innings, gameStarted } = useContext(GameContext);
 
   if (!gameStarted) return null;
 

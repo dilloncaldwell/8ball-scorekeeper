@@ -1,59 +1,75 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { GameContext } from '../context/GameContext';
 import { useGame } from '../context/useGame';
 import InningTracker from './InningTracker';
 
 const GameUI = () => {
-  const { players, currentTurn, setCurrentTurn, breakerIndex, innings, setInnings, currentInning, setCurrentInning, gameTimer } = useGame();
+  const { players, currentTurn, setCurrentTurn, breakerIndex, setInnings, setCurrentInning, gameTimer, turnHistory, setTurnHistory } = useGame();
+  const { resetMatch } = useContext(GameContext);
 
-  // const switchTurn = () => {
-  //   const nextTurn = (currentTurn + 1) % 2;
-  //   setCurrentTurn(nextTurn);
-
-  //   // Track inning if turn goes back to breaker
-  //   if (nextTurn === breakerIndex) {
-  //     setCurrentInning(currentInning + 1);
-  //   }
-  // };
   const switchTurn = () => {
     const next = currentTurn === 0 ? 1 : 0;
+    const updatedHistory = [...turnHistory, currentTurn];
+    setTurnHistory(updatedHistory);
     setCurrentTurn(next);
 
-    if (next === breakerIndex) {
-      setCurrentInning((prev) => prev + 1);
-      setInnings((prev) => [...prev, currentInning + 1]);
+    const turnIndex = updatedHistory.length;
+    const offset = breakerIndex; // 0 or 1
+
+    const effectiveInning = Math.floor((turnIndex - offset) / 2);
+    const inningShouldIncrement = (turnIndex - offset) % 2 === 0;
+
+    if (inningShouldIncrement && effectiveInning >= 0) {
+      setCurrentInning(effectiveInning);
+      setInnings((prev) => {
+        if (!prev.includes(effectiveInning)) {
+          return [...prev, effectiveInning];
+        }
+        return prev;
+      });
+      console.log('✅ Inning incremented');
+    } else {
+      console.log('⏸️ Not a full inning yet');
     }
+
+    // console.log('Turn History:', updatedHistory);
   };
 
-  // const undoTurn = () => {
-  //   const prev = currentTurn === 0 ? 1 : 0;
-  //   setCurrentTurn(prev);
-
-  //   // Remove inning if it was added inappropriately
-  //   if (innings.length > 0 && prev === breakerIndex && innings[innings.length - 1] === currentInning) {
-  //     const updated = [...innings];
-  //     updated.pop();
-  //     setInnings(updated);
-  //     setCurrentInning((prev) => Math.max(1, prev - 1));
-  //   }
-  // };
   const undoTurn = () => {
-    const previousTurn = currentTurn === 0 ? 1 : 0;
+    if (turnHistory.length === 0) return;
+
+    const updatedHistory = turnHistory.slice(0, -1);
+    const previousTurn = turnHistory[turnHistory.length - 1];
+    setTurnHistory(updatedHistory);
     setCurrentTurn(previousTurn);
 
-    // If the player we're switching back to is the breaker, and we're past inning 0,
-    // and the current inning was added this turn, remove it
-    if (previousTurn === breakerIndex && currentInning > 0 && innings.length > 0 && innings[innings.length - 1] === currentInning) {
+    const offset = breakerIndex;
+    const prevInningCount = Math.floor((turnHistory.length - offset) / 2);
+    const newInningCount = Math.floor((updatedHistory.length - offset) / 2);
+
+    if (newInningCount < prevInningCount) {
+      setCurrentInning(newInningCount);
       setInnings((prev) => prev.slice(0, -1));
-      setCurrentInning((prev) => prev - 1);
+      console.log('↩️ Inning decremented');
+    } else {
+      console.log('⏸️ No inning change');
     }
+
+    // console.log('Undo Turn History:', updatedHistory);
   };
 
   const otherPlayer = players[(currentTurn + 1) % 2];
 
+  const getActualPlayerIndex = (turn, breaker) => {
+    // If breakerIndex is 0: turn 0 = player 0
+    // If breakerIndex is 1: turn 0 = player 1
+    return (breaker + turn) % 2;
+  };
+
   return (
     <>
       <div className="ui-header">
-        <div className={`p-card ${currentTurn === 0 ? 'current-player' : ''} `}>
+        <div className={`p-card ${getActualPlayerIndex(currentTurn, breakerIndex) === 0 ? 'current-player' : ''}`}>
           {breakerIndex === 0 && <span className="break"> Break</span>}
           <h3>{players[0]?.name}</h3>
           <p>
@@ -67,7 +83,7 @@ const GameUI = () => {
           </div>
           <InningTracker />
         </div>
-        <div className={`p-card ${currentTurn === 1 ? 'current-player' : ''}`}>
+        <div className={`p-card ${getActualPlayerIndex(currentTurn, breakerIndex) === 1 ? 'current-player' : ''}`}>
           {breakerIndex === 1 && <span className="break"> Break</span>}
           <h3>{players[1]?.name}</h3>
           <p>
@@ -80,6 +96,7 @@ const GameUI = () => {
         <button onClick={switchTurn}>Switch turn to {otherPlayer?.name}</button>
         <button>Game Over</button>
         <button onClick={undoTurn}>Undo Turn</button>
+        <button onClick={resetMatch}>Reset Match</button>
       </div>
     </>
   );

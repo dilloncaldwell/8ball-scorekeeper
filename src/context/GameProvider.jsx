@@ -22,6 +22,7 @@ export const GameProvider = ({ children }) => {
   const [currentInning, setCurrentInning] = useState(saved?.currentInning || 0);
   const [gameTimer, setGameTimer] = useState(0);
   const [matchHistory, setMatchHistory] = useState(saved?.matchHistory || []);
+  const [turnHistory, setTurnHistory] = useState(saved?.turnHistory || []);
 
   useEffect(() => {
     const state = {
@@ -33,11 +34,26 @@ export const GameProvider = ({ children }) => {
       innings,
       currentInning,
       matchHistory,
+      turnHistory,
     };
     localStorage.setItem('8ball-game-state', JSON.stringify(state));
-  }, [players, breakerIndex, currentTurn, gameStarted, gameEnded, innings, currentInning, matchHistory]);
+  }, [players, breakerIndex, currentTurn, gameStarted, gameEnded, innings, currentInning, matchHistory, turnHistory]);
 
   const resetGameTimer = () => setGameTimer(0);
+
+  const resetMatch = () => {
+    setPlayers([]);
+    setBreakerIndex(0);
+    setCurrentTurn(0);
+    setGameStarted(false);
+    setGameEnded(false);
+    setInnings([]);
+    setCurrentInning(0);
+    setTurnHistory([]);
+    setGameTimer(0);
+    setMatchHistory([]);
+    localStorage.removeItem('8ball-game-state');
+  };
 
   return (
     <GameContext.Provider
@@ -61,6 +77,9 @@ export const GameProvider = ({ children }) => {
         resetGameTimer,
         matchHistory,
         setMatchHistory,
+        turnHistory,
+        setTurnHistory,
+        resetMatch,
       }}
     >
       {children}
