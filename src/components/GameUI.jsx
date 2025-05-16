@@ -1,23 +1,24 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { GameContext } from '../context/GameContext';
 import { useGame } from '../context/useGame';
+import GameEndModal from './GameEndModal';
 import InningTracker from './InningTracker';
 
 const GameUI = () => {
   const { players, currentTurn, setCurrentTurn, breakerIndex, setInnings, setCurrentInning, gameTimer, turnHistory, setTurnHistory } = useGame();
   const { resetMatch } = useContext(GameContext);
+  const [showGameOverModal, setShowGameOverModal] = useState(false);
 
   const switchTurn = () => {
     const next = currentTurn === 0 ? 1 : 0;
-    const updatedHistory = [...turnHistory, currentTurn];
+    const actualPlayer = getActualPlayerIndex(currentTurn, breakerIndex);
+    const updatedHistory = [...turnHistory, actualPlayer];
     setTurnHistory(updatedHistory);
     setCurrentTurn(next);
 
     const turnIndex = updatedHistory.length;
-    const offset = breakerIndex; // 0 or 1
-
-    const effectiveInning = Math.floor((turnIndex - offset) / 2);
-    const inningShouldIncrement = (turnIndex - offset) % 2 === 0;
+    const effectiveInning = Math.floor(turnIndex / 2);
+    const inningShouldIncrement = turnIndex % 2 === 0;
 
     if (inningShouldIncrement && effectiveInning >= 0) {
       setCurrentInning(effectiveInning);
@@ -31,7 +32,9 @@ const GameUI = () => {
     } else {
       console.log('⏸️ Not a full inning yet');
     }
-
+    console.log('breakerIndex:', breakerIndex);
+    console.log('currentTurn:', currentTurn);
+    console.log('turnHistory:', turnHistory);
     // console.log('Turn History:', updatedHistory);
   };
 
@@ -39,13 +42,12 @@ const GameUI = () => {
     if (turnHistory.length === 0) return;
 
     const updatedHistory = turnHistory.slice(0, -1);
-    const previousTurn = turnHistory[turnHistory.length - 1];
+    const previousTurn = turnHistory[turnHistory.length - 2] === undefined ? 0 : getActualPlayerIndex(turnHistory[turnHistory.length - 2], breakerIndex) === 0 ? 0 : 1;
     setTurnHistory(updatedHistory);
     setCurrentTurn(previousTurn);
 
-    const offset = breakerIndex;
-    const prevInningCount = Math.floor((turnHistory.length - offset) / 2);
-    const newInningCount = Math.floor((updatedHistory.length - offset) / 2);
+    const prevInningCount = Math.floor(turnHistory.length / 2);
+    const newInningCount = Math.floor(updatedHistory.length / 2);
 
     if (newInningCount < prevInningCount) {
       setCurrentInning(newInningCount);
@@ -94,10 +96,11 @@ const GameUI = () => {
 
       <div className="btn-wrapper">
         <button onClick={switchTurn}>Switch turn to {otherPlayer?.name}</button>
-        <button>Game Over</button>
+        <button onClick={() => setShowGameOverModal(true)}>Game Over</button>
         <button onClick={undoTurn}>Undo Turn</button>
         <button onClick={resetMatch}>Reset Match</button>
       </div>
+      {showGameOverModal && <GameEndModal isOpen={showGameOverModal} onClose={() => setShowGameOverModal(false)} />}
     </>
   );
 };
