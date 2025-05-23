@@ -21,6 +21,8 @@ export const GameProvider = ({ children }) => {
   const [innings, setInnings] = useState(saved?.innings || []);
   const [currentInning, setCurrentInning] = useState(saved?.currentInning || 0);
   const [gameTimer, setGameTimer] = useState(0);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [totalMatchTime, setTotalMatchTime] = useState(0);
   const [matchHistory, setMatchHistory] = useState(saved?.matchHistory || []);
   const [turnHistory, setTurnHistory] = useState(saved?.turnHistory || []);
 
@@ -33,13 +35,33 @@ export const GameProvider = ({ children }) => {
       gameEnded,
       innings,
       currentInning,
+      gameTimer,
       matchHistory,
       turnHistory,
     };
     localStorage.setItem('8ball-game-state', JSON.stringify(state));
-  }, [players, breakerIndex, currentTurn, gameStarted, gameEnded, innings, currentInning, matchHistory, turnHistory]);
+  }, [players, breakerIndex, currentTurn, gameStarted, gameEnded, innings, currentInning, gameTimer, matchHistory, turnHistory]);
 
-  const resetGameTimer = () => setGameTimer(0);
+  const startGameTimer = () => setIsTimerRunning(true);
+
+  const resetGameTimer = () => {
+    setGameTimer(0);
+    setIsTimerRunning(false);
+  };
+
+  const resetGame = () => {
+    resetGameTimer();
+    setCurrentTurn(0); // Always let breaker go first
+    setInnings([]);
+    setCurrentInning(0);
+    setTurnHistory([]);
+    startGameTimer();
+    // setGameTimer(0);
+  };
+
+  const pauseGameTimer = () => {
+    setIsTimerRunning(false); // Ensure the timer stops
+  };
 
   const resetMatch = () => {
     setPlayers([]);
@@ -50,7 +72,10 @@ export const GameProvider = ({ children }) => {
     setInnings([]);
     setCurrentInning(0);
     setTurnHistory([]);
+    setTotalMatchTime(0);
+    setIsTimerRunning(false);
     setGameTimer(0);
+    resetGameTimer();
     setMatchHistory([]);
     localStorage.removeItem('8ball-game-state');
   };
@@ -74,12 +99,18 @@ export const GameProvider = ({ children }) => {
         setCurrentInning,
         gameTimer,
         setGameTimer,
+        isTimerRunning,
+        startGameTimer,
+        pauseGameTimer,
         resetGameTimer,
+        totalMatchTime,
+        setTotalMatchTime,
         matchHistory,
         setMatchHistory,
         turnHistory,
         setTurnHistory,
         resetMatch,
+        resetGame,
       }}
     >
       {children}

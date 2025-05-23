@@ -1,15 +1,22 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { GameContext } from '../context/GameContext';
 import { useGame } from '../context/useGame';
 import GameEndModal from './GameEndModal';
+import GameTimer from './GameTimer';
 import InningTracker from './InningTracker';
 import MatchWinnerDisplay from './MatchWinnerDisplay';
 
 const GameUI = () => {
-  const { players, currentTurn, setCurrentTurn, breakerIndex, setInnings, setCurrentInning, gameTimer, turnHistory, setTurnHistory } = useGame();
+  const { players, currentTurn, setCurrentTurn, breakerIndex, setInnings, setCurrentInning, turnHistory, setTurnHistory, startGameTimer, gameEnded } = useGame();
   const { resetMatch } = useContext(GameContext);
   const [showGameOverModal, setShowGameOverModal] = useState(false);
   const [showMatchWinnerModal, setShowMatchWinnerModal] = useState(false);
+
+  useEffect(() => {
+    if (players.length === 2 && !gameEnded) {
+      startGameTimer();
+    }
+  }, [players.length, gameEnded, startGameTimer]);
 
   const switchTurn = () => {
     const next = currentTurn === 0 ? 1 : 0;
@@ -30,14 +37,13 @@ const GameUI = () => {
         }
         return prev;
       });
-      console.log('✅ Inning incremented');
+      // console.log('✅ Inning incremented');
     } else {
-      console.log('⏸️ Not a full inning yet');
+      // console.log('⏸️ Not a full inning yet');
     }
-    console.log('breakerIndex:', breakerIndex);
-    console.log('currentTurn:', currentTurn);
-    console.log('turnHistory:', turnHistory);
-    // console.log('Turn History:', updatedHistory);
+    // console.log('breakerIndex:', breakerIndex);
+    // console.log('currentTurn:', currentTurn);
+    // console.log('turnHistory:', turnHistory);
   };
 
   const undoTurn = () => {
@@ -54,12 +60,10 @@ const GameUI = () => {
     if (newInningCount < prevInningCount) {
       setCurrentInning(newInningCount);
       setInnings((prev) => prev.slice(0, -1));
-      console.log('↩️ Inning decremented');
+      // console.log('↩️ Inning decremented');
     } else {
-      console.log('⏸️ No inning change');
+      // console.log('⏸️ No inning change');
     }
-
-    // console.log('Undo Turn History:', updatedHistory);
   };
 
   const otherPlayer = players[(currentTurn + 1) % 2];
@@ -81,10 +85,7 @@ const GameUI = () => {
           </p>
         </div>
         <div className="middle-stats">
-          <div className="game-timer">
-            Game Timer:
-            <br /> {gameTimer}s
-          </div>
+          <GameTimer />
           <InningTracker />
         </div>
         <div className={`p-card ${getActualPlayerIndex(currentTurn, breakerIndex) === 1 ? 'current-player' : ''}`}>

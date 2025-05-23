@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useGame } from '../context/useGame';
 
 const GameEndModal = ({ isOpen, onClose, onMatchEnd }) => {
@@ -8,17 +8,28 @@ const GameEndModal = ({ isOpen, onClose, onMatchEnd }) => {
     currentTurn,
     breakerIndex,
     innings,
-    setInnings,
-    setCurrentInning,
-    setTurnHistory,
     setBreakerIndex,
-    setCurrentTurn,
+    gameTimer,
+    pauseGameTimer,
+    startGameTimer,
+    setTotalMatchTime,
     matchHistory,
     setMatchHistory,
     setGameEnded,
+    resetGame,
   } = useGame();
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (isOpen) {
+      pauseGameTimer(); // Pause the timer when modal opens
+    }
+  }, [isOpen, pauseGameTimer]);
+
+  // Handle cancel - resume timer from where it was paused
+  const handleCancel = () => {
+    startGameTimer();
+    onClose();
+  };
 
   const getActualPlayerIndex = (turn, breaker) => (breaker + turn) % 2;
   const actualCurrent = getActualPlayerIndex(currentTurn, breakerIndex);
@@ -27,30 +38,30 @@ const GameEndModal = ({ isOpen, onClose, onMatchEnd }) => {
   const onDeclareWinner = (isCurrentPlayerWinner) => {
     const winnerIndex = isCurrentPlayerWinner ? actualCurrent : actualOpponent;
     const winner = players[winnerIndex];
-    console.log('winner', winner.name);
-    console.log('currentTurn', players[currentTurn]);
 
     // 1. Save match history
-    setMatchHistory([
-      ...matchHistory,
-      {
-        game: matchHistory.length + 1,
-        winner: winner.name,
-        innings: innings.length,
-      },
-    ]);
+    const currentGameStats = {
+      game: matchHistory.length + 1,
+      winner: winner.name,
+      innings: innings.length,
+      time: gameTimer,
+    };
 
-    console.log('matchHistory', matchHistory);
+    // Update match history
+    // setMatchHistory((prev) => [...prev, currentGameStats]);
+    setMatchHistory((prev) => {
+      const updatedHistory = [...prev, currentGameStats];
+      console.log('Updated Match History:', updatedHistory);
+      return updatedHistory;
+    });
+
+    // Add current game time to total match time
+    setTotalMatchTime((prev) => prev + gameTimer);
 
     // 2. Update winner score
     const updatedPlayers = [...players];
     updatedPlayers[winnerIndex].score += 1;
     setPlayers(updatedPlayers);
-
-    // 3. Reset innings and turns
-    setInnings([]);
-    setCurrentInning(0);
-    setTurnHistory([]);
 
     // 4. Check if winner reached their race goal
     const hasWonMatch = updatedPlayers[winnerIndex].score >= updatedPlayers[winnerIndex].race;
@@ -61,9 +72,8 @@ const GameEndModal = ({ isOpen, onClose, onMatchEnd }) => {
       onMatchEnd();
     } else {
       // Start next game with this player as breaker and current turn
+      resetGame();
       setBreakerIndex(winnerIndex);
-      setCurrentTurn(0); // Always let breaker go first
-      setGameEnded(false);
     }
 
     // 5. Close modal
@@ -88,7 +98,7 @@ const GameEndModal = ({ isOpen, onClose, onMatchEnd }) => {
           <button onClick={() => onDeclareWinner(false)}>Scratched on 8 Ball</button>
           <button onClick={() => onDeclareWinner(false)}>Made 8 Early</button>
           <br />
-          <button onClick={onClose}>Cancel</button>
+          <button onClick={handleCancel}>Cancel</button>
         </div>
       </div>
     </div>

@@ -3,8 +3,14 @@ import { GameContext } from '../context/GameContext';
 import { useGame } from '../context/useGame';
 
 const MatchWinnerDisplay = ({ isOpen }) => {
-  const { matchHistory, players } = useGame();
+  const { matchHistory, players, totalMatchTime } = useGame();
   const { resetMatch } = useContext(GameContext);
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${String(remainingSeconds).padStart(2, '0')}`;
+  };
 
   if (!isOpen) return null;
 
@@ -27,6 +33,7 @@ const MatchWinnerDisplay = ({ isOpen }) => {
               ))}
             </div>
           </div>
+          <div className="total-match-time">Total Match Time: {formatTime(totalMatchTime)}</div>
           {matchHistory.map((game) => (
             <div key={game.game} className="game-summary">
               <div className="game-winner">
@@ -34,7 +41,7 @@ const MatchWinnerDisplay = ({ isOpen }) => {
               </div>
               <div className="game-stats">
                 <div className="innings">Innings: {game.innings}</div>
-                <div className="game-time">time: 0s</div>
+                <div className="game-time">time: {formatTime(game.time)}</div>
               </div>
             </div>
           ))}
