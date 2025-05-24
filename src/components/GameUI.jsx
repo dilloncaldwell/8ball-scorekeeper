@@ -26,6 +26,7 @@ const GameUI = () => {
     const updatedHistory = [...turnHistory, actualPlayer];
     setTurnHistory(updatedHistory);
     setCurrentTurn(next);
+    console.log('switch player turn History', turnHistory);
 
     const turnIndex = updatedHistory.length;
     const effectiveInning = Math.floor(turnIndex / 2);
@@ -50,7 +51,7 @@ const GameUI = () => {
 
     // console.log('breakerIndex at start of undo', breakerIndex);
     // console.log('currentTurn at start of undo', currentTurn);
-    // console.log('turnHistory when button is pressed', turnHistory);
+    console.log('turnHistory when button is pressed', turnHistory);
 
     // Calculate the previousTurnIndex before modifying turnHistory
     const previousTurnIndex = turnHistory.length - 1;
@@ -61,6 +62,8 @@ const GameUI = () => {
 
     // Create a new updatedHistory by removing the last turn
     const updatedHistory = turnHistory.slice(0, -1);
+    console.log('updatedHistory', updatedHistory);
+    // console.log('previousTurn', previousTurn);
 
     setTurnHistory(updatedHistory); // update turnHistory to updated turnHistory
     setCurrentTurn(previousTurn); // update currentTurn to the previous player
