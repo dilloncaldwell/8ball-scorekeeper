@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useGame } from '../context/useGame';
 
 const MatchSetupForm = () => {
-  const { setPlayers, setBreakerIndex, setGameStarted, startGameTimer } = useGame();
+  const { setPlayers, setBreakerIndex, setGameStarted, startGameTimer, setTurnHistory } = useGame();
   const [player1, setPlayer1] = useState('');
   const [player2, setPlayer2] = useState('');
   const [race1, setRace1] = useState(5);
@@ -17,6 +17,7 @@ const MatchSetupForm = () => {
     setBreakerIndex(breaker);
     setGameStarted(true);
     startGameTimer();
+    setTurnHistory([]);
   };
 
   const isFormValid = player1.trim() && player2.trim();

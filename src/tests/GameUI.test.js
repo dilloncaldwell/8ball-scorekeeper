@@ -74,7 +74,7 @@ describe('GameUI - undoTurn functionality', () => {
     expect(mockSetTurnHistory).toHaveBeenCalledWith([0, 1, 0]);
 
     // Verify current turn was set to the last player's turn
-    expect(mockSetCurrentTurn).toHaveBeenCalledWith(1);
+    expect(mockSetCurrentTurn).toHaveBeenCalledWith(0);
 
     // Verify the number of calls
     expect(mockSetTurnHistory).toHaveBeenCalledTimes(1);
