@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { GameContext } from '../context/GameContext';
 import { useGame } from '../context/useGame';
 import GameEndModal from './GameEndModal';
@@ -7,16 +7,10 @@ import InningTracker from './InningTracker';
 import MatchWinnerDisplay from './MatchWinnerDisplay';
 
 const GameUI = () => {
-  const { players, currentTurn, setCurrentTurn, breakerIndex, setInnings, setCurrentInning, turnHistory, setTurnHistory, startGameTimer, gameEnded } = useGame();
+  const { players, currentTurn, setCurrentTurn, breakerIndex, setInnings, setCurrentInning, turnHistory, setTurnHistory } = useGame();
   const { resetMatch } = useContext(GameContext);
   const [showGameOverModal, setShowGameOverModal] = useState(false);
   const [showMatchWinnerModal, setShowMatchWinnerModal] = useState(false);
-
-  useEffect(() => {
-    if (players.length === 2 && !gameEnded) {
-      startGameTimer();
-    }
-  }, [players.length, gameEnded, startGameTimer]);
 
   const switchTurn = () => {
     const next = currentTurn === 0 ? 1 : 0;
@@ -41,30 +35,51 @@ const GameUI = () => {
     } else {
       // console.log('⏸️ Not a full inning yet');
     }
-    // console.log('breakerIndex:', breakerIndex);
-    // console.log('currentTurn:', currentTurn);
-    // console.log('turnHistory:', turnHistory);
   };
 
   const undoTurn = () => {
     if (turnHistory.length === 0) return;
 
-    const updatedHistory = turnHistory.slice(0, -1);
-    const previousTurn = turnHistory[turnHistory.length - 2] === undefined ? 0 : getActualPlayerIndex(turnHistory[turnHistory.length - 2], breakerIndex) === 0 ? 0 : 1;
+    const updatedHistory = turnHistory.slice(0, -1); // Remove the last turn
+    const previousTurnIndex = updatedHistory.length - 1; // Index of the last turn in the updated history
+
+    // Determine the previous turn based on the updated history
+    const previousTurn = previousTurnIndex >= 0 ? getActualPlayerIndex(previousTurnIndex, breakerIndex) : 0; // Default to player 0 if no history exists
+
     setTurnHistory(updatedHistory);
     setCurrentTurn(previousTurn);
 
+    // Update innings if necessary
     const prevInningCount = Math.floor(turnHistory.length / 2);
     const newInningCount = Math.floor(updatedHistory.length / 2);
 
     if (newInningCount < prevInningCount) {
       setCurrentInning(newInningCount);
-      setInnings((prev) => prev.slice(0, -1));
-      // console.log('↩️ Inning decremented');
+      setInnings((prev) => prev.slice(0, -1)); // Remove the last inning
+      console.log('↩️ Inning decremented');
     } else {
-      // console.log('⏸️ No inning change');
+      console.log('⏸️ No inning change');
     }
   };
+  // const undoTurn = () => {
+  //   if (turnHistory.length === 0) return;
+
+  //   const updatedHistory = turnHistory.slice(0, -1);
+  //   const previousTurn = turnHistory[turnHistory.length - 2] === undefined ? 0 : getActualPlayerIndex(turnHistory[turnHistory.length - 2], breakerIndex) === 0 ? 0 : 1;
+  //   setTurnHistory(updatedHistory);
+  //   setCurrentTurn(previousTurn);
+
+  //   const prevInningCount = Math.floor(turnHistory.length / 2);
+  //   const newInningCount = Math.floor(updatedHistory.length / 2);
+
+  //   if (newInningCount < prevInningCount) {
+  //     setCurrentInning(newInningCount);
+  //     setInnings((prev) => prev.slice(0, -1));
+  //     // console.log('↩️ Inning decremented');
+  //   } else {
+  //     // console.log('⏸️ No inning change');
+  //   }
+  // };
 
   const otherPlayer = players[(currentTurn + 1) % 2];
 
@@ -80,7 +95,7 @@ const GameUI = () => {
         <div className={`p-card ${getActualPlayerIndex(currentTurn, breakerIndex) === 0 ? 'current-player' : ''}`}>
           {breakerIndex === 0 && <span className="break"> Break</span>}
           <h3>{players[0]?.name}</h3>
-          <p>
+          <p className="race">
             {players[0]?.score} / {players[0]?.race}
           </p>
         </div>
@@ -91,7 +106,7 @@ const GameUI = () => {
         <div className={`p-card ${getActualPlayerIndex(currentTurn, breakerIndex) === 1 ? 'current-player' : ''}`}>
           {breakerIndex === 1 && <span className="break"> Break</span>}
           <h3>{players[1]?.name}</h3>
-          <p>
+          <p className="race">
             {players[1]?.score} / {players[1]?.race}
           </p>
         </div>
@@ -99,8 +114,11 @@ const GameUI = () => {
 
       <div className="btn-wrapper">
         <button onClick={switchTurn}>Switch turn to {otherPlayer?.name}</button>
-        <button onClick={() => setShowGameOverModal(true)}>Game Over</button>
+        <button className="gameover" onClick={() => setShowGameOverModal(true)}>
+          Game Over
+        </button>
         <button onClick={undoTurn}>Undo Turn</button>
+        <br />
         <button onClick={resetMatch}>Reset Match</button>
       </div>
       {showGameOverModal && <GameEndModal isOpen={showGameOverModal} onClose={() => setShowGameOverModal(false)} onMatchEnd={() => setShowMatchWinnerModal(true)} />}

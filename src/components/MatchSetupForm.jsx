@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useGame } from '../context/useGame';
 
 const MatchSetupForm = () => {
-  const { setPlayers, setBreakerIndex, setGameStarted } = useGame();
+  const { setPlayers, setBreakerIndex, setGameStarted, startGameTimer } = useGame();
   const [player1, setPlayer1] = useState('');
   const [player2, setPlayer2] = useState('');
   const [race1, setRace1] = useState(5);
@@ -16,6 +16,7 @@ const MatchSetupForm = () => {
     ]);
     setBreakerIndex(breaker);
     setGameStarted(true);
+    startGameTimer();
   };
 
   const isFormValid = player1.trim() && player2.trim();
@@ -52,6 +53,7 @@ const MatchSetupForm = () => {
           <option value={1}>{player2.trim() || 'Player 2'}</option>
         </select>
       </div>
+      <br />
       <div className="btn-wrapper">
         <button onClick={startMatch} disabled={!isFormValid}>
           Start Match

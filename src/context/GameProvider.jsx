@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { GameContext } from './GameContext';
 
 const initialState = () => {
@@ -12,7 +12,6 @@ const initialState = () => {
 
 export const GameProvider = ({ children }) => {
   const saved = initialState();
-
   const [players, setPlayers] = useState(saved?.players || []);
   const [breakerIndex, setBreakerIndex] = useState(saved?.breakerIndex || 0);
   const [currentTurn, setCurrentTurn] = useState(saved?.currentTurn || 0);
@@ -22,9 +21,51 @@ export const GameProvider = ({ children }) => {
   const [currentInning, setCurrentInning] = useState(saved?.currentInning || 0);
   const [gameTimer, setGameTimer] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [intervalId, setIntervalId] = useState(null);
   const [totalMatchTime, setTotalMatchTime] = useState(0);
   const [matchHistory, setMatchHistory] = useState(saved?.matchHistory || []);
   const [turnHistory, setTurnHistory] = useState(saved?.turnHistory || []);
+
+  const startGameTimer = useCallback(() => {
+    if (!isTimerRunning) {
+      // console.log('startGameTimer called');
+      setIsTimerRunning(true);
+      // Clear any existing interval before starting a new one
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+      const id = setInterval(() => {
+        setGameTimer((prev) => prev + 1);
+      }, 1000);
+      setIntervalId(id);
+    }
+  }, [isTimerRunning, intervalId]);
+
+  const pauseGameTimer = () => {
+    if (isTimerRunning) {
+      // console.log('pauseGameTimer called');
+      setIsTimerRunning(false);
+      if (intervalId) {
+        clearInterval(intervalId);
+        setIntervalId(null);
+      }
+    }
+  };
+
+  const resetGameTimer = () => {
+    pauseGameTimer();
+    setGameTimer(0);
+  };
+
+  useEffect(() => {
+    return () => {
+      // Cleanup interval on unmount
+      if (intervalId) {
+        // console.log('Cleaning up interval on unmount');
+        clearInterval(intervalId);
+      }
+    };
+  }, [intervalId]);
 
   useEffect(() => {
     const state = {
@@ -35,32 +76,17 @@ export const GameProvider = ({ children }) => {
       gameEnded,
       innings,
       currentInning,
-      gameTimer,
       matchHistory,
       turnHistory,
     };
     localStorage.setItem('8ball-game-state', JSON.stringify(state));
-  }, [players, breakerIndex, currentTurn, gameStarted, gameEnded, innings, currentInning, gameTimer, matchHistory, turnHistory]);
-
-  const startGameTimer = () => setIsTimerRunning(true);
-
-  const resetGameTimer = () => {
-    setGameTimer(0);
-    setIsTimerRunning(false);
-  };
+  }, [players, breakerIndex, currentTurn, gameStarted, gameEnded, innings, currentInning, matchHistory, turnHistory]);
 
   const resetGame = () => {
-    resetGameTimer();
-    setCurrentTurn(0); // Always let breaker go first
+    setCurrentTurn(0);
     setInnings([]);
     setCurrentInning(0);
     setTurnHistory([]);
-    startGameTimer();
-    // setGameTimer(0);
-  };
-
-  const pauseGameTimer = () => {
-    setIsTimerRunning(false); // Ensure the timer stops
   };
 
   const resetMatch = () => {
@@ -75,7 +101,6 @@ export const GameProvider = ({ children }) => {
     setTotalMatchTime(0);
     setIsTimerRunning(false);
     setGameTimer(0);
-    resetGameTimer();
     setMatchHistory([]);
     localStorage.removeItem('8ball-game-state');
   };

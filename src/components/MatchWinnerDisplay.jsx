@@ -19,32 +19,36 @@ const MatchWinnerDisplay = ({ isOpen }) => {
   return (
     <div className="modal-overlay">
       <div className="modal match-end">
-        <h2>🏆 Match Winner</h2>
-        <h3>{winner} has won the match!</h3>
+        <h2>Match Summary</h2>
         <div className="match-summary">
-          <div className="title">Match Summary</div>
+          <h3>{winner} wins! 🎉</h3>
           <div className="final-scores">
             <div className="scores">
               {players.map((player, index) => (
                 <div key={index}>
-                  {player.name}: <br />
+                  <div className="name">
+                    {player.score >= player.race && '🏆 '}
+                    {player.name}
+                  </div>
                   {player.score} / {player.race}
                 </div>
               ))}
             </div>
+            <div className="total-match-time">Total Match Time: {formatTime(totalMatchTime)}</div>
           </div>
-          <div className="total-match-time">Total Match Time: {formatTime(totalMatchTime)}</div>
-          {matchHistory.map((game) => (
-            <div key={game.game} className="game-summary">
-              <div className="game-winner">
-                Game {game.game}: {game.winner}
+          <div className="game-summary-list">
+            {matchHistory.map((game) => (
+              <div key={game.game} className="game-summary">
+                <div className="game-winner">
+                  Game {game.game}: {game.winner}
+                </div>
+                <div className="game-stats">
+                  <div className="innings">Innings: {game.innings}</div>
+                  <div className="game-time">Time: {formatTime(game.time)}</div>
+                </div>
               </div>
-              <div className="game-stats">
-                <div className="innings">Innings: {game.innings}</div>
-                <div className="game-time">time: {formatTime(game.time)}</div>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
         <br />
         <button onClick={resetMatch}>Play Again</button>

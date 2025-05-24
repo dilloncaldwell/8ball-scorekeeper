@@ -12,6 +12,7 @@ const GameEndModal = ({ isOpen, onClose, onMatchEnd }) => {
     gameTimer,
     pauseGameTimer,
     startGameTimer,
+    resetGameTimer,
     setTotalMatchTime,
     matchHistory,
     setMatchHistory,
@@ -20,16 +21,21 @@ const GameEndModal = ({ isOpen, onClose, onMatchEnd }) => {
   } = useGame();
 
   useEffect(() => {
+    // console.log('GameEndModal: isOpen changed to', isOpen);
     if (isOpen) {
+      // console.log('GameEndModal: Pausing timer');
       pauseGameTimer(); // Pause the timer when modal opens
     }
   }, [isOpen, pauseGameTimer]);
 
   // Handle cancel - resume timer from where it was paused
   const handleCancel = () => {
+    // console.log('GameEndModal: Resuming timer');
     startGameTimer();
     onClose();
   };
+
+  if (!isOpen) return null;
 
   const getActualPlayerIndex = (turn, breaker) => (breaker + turn) % 2;
   const actualCurrent = getActualPlayerIndex(currentTurn, breakerIndex);
@@ -48,13 +54,7 @@ const GameEndModal = ({ isOpen, onClose, onMatchEnd }) => {
     };
 
     // Update match history
-    // setMatchHistory((prev) => [...prev, currentGameStats]);
-    setMatchHistory((prev) => {
-      const updatedHistory = [...prev, currentGameStats];
-      console.log('Updated Match History:', updatedHistory);
-      return updatedHistory;
-    });
-
+    setMatchHistory((prev) => [...prev, currentGameStats]);
     // Add current game time to total match time
     setTotalMatchTime((prev) => prev + gameTimer);
 
@@ -63,7 +63,7 @@ const GameEndModal = ({ isOpen, onClose, onMatchEnd }) => {
     updatedPlayers[winnerIndex].score += 1;
     setPlayers(updatedPlayers);
 
-    // 4. Check if winner reached their race goal
+    // 3. Check if winner reached their race goal
     const hasWonMatch = updatedPlayers[winnerIndex].score >= updatedPlayers[winnerIndex].race;
 
     if (hasWonMatch) {
@@ -72,11 +72,13 @@ const GameEndModal = ({ isOpen, onClose, onMatchEnd }) => {
       onMatchEnd();
     } else {
       // Start next game with this player as breaker and current turn
-      resetGame();
+      resetGameTimer();
       setBreakerIndex(winnerIndex);
+      resetGame();
+      startGameTimer();
     }
 
-    // 5. Close modal
+    // 4. Close modal
     onClose();
   };
 
@@ -86,15 +88,13 @@ const GameEndModal = ({ isOpen, onClose, onMatchEnd }) => {
     <div className="modal-overlay">
       <div className="modal">
         <h2>Who Won?</h2>
-        <p>Current player: {currentDisplayPlayer?.name}</p>
-
         <div className="modal-buttons">
-          <h3>✅ Current Player Wins</h3>
+          <h3>✅ {currentDisplayPlayer?.name} Wins</h3>
           <button onClick={() => onDeclareWinner(true)}>Made 8 Ball</button>
           <button onClick={() => onDeclareWinner(true)}>Break & Run</button>
           <button onClick={() => onDeclareWinner(true)}>8 on Break</button>
 
-          <h3>❌ Current Player Loses</h3>
+          <h3>❌ {currentDisplayPlayer?.name} Loses</h3>
           <button onClick={() => onDeclareWinner(false)}>Scratched on 8 Ball</button>
           <button onClick={() => onDeclareWinner(false)}>Made 8 Early</button>
           <br />

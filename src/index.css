@@ -30,7 +30,8 @@ body {
   min-height: 100vh; */
   margin: 0;
   padding: 0;
-  background-color: #242424;
+  /* background-color: #242424; */
+  background: #060728;
 }
 
 h1 {
@@ -45,29 +46,21 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  /* background-color: #1a1a1a; */
   cursor: pointer;
   transition: border-color 0.25s;
+  background: #3f44a1;
+  color: #fff;
+}
+button.gameover {
+  background: #76102a;
 }
 button:hover {
   border-color: #646cff;
 }
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+  outline: 4px auto #646cff;
 }
 
 /* Match setup */
@@ -99,6 +92,12 @@ label {
 input,
 select {
   padding: 5px 10px;
+  border: 1px solid #4c769c;
+  border-radius: 3px;
+  background: #4a4375;
+}
+input::placeholder {
+  color: #a4c1dc;
 }
 .input-error {
   border: 1px solid red;
@@ -109,18 +108,23 @@ select {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 35px;
-  margin-bottom: 45px;
+  margin-bottom: 25px;
   width: 100%;
 }
 .p-card {
-  padding: 25px;
+  padding: 20px 20px 20px;
   border-radius: 5px;
-  border: 1px solid #213547;
+  /* border: 1px solid #213547; */
+  border: 2px solid transparent;
   position: relative;
 }
 .p-card.current-player {
-  background: #213547;
-  border: 1px solid #646cff;
+  /* background: #213547; */
+  background: #150e2f;
+  border: 2px solid #646cff;
+}
+.p-card .race {
+  margin: 0;
 }
 .ui-header .middle-stats {
   text-align: center;
@@ -183,8 +187,9 @@ select {
 }
 
 .modal {
-  background: #242424;
-  padding: 2rem;
+  /* background: #242424; */
+  background: #05072b;
+  padding: 1.5rem 2rem;
   border-radius: 1rem;
   width: 80%;
   text-align: center;
@@ -197,32 +202,54 @@ select {
 }
 
 /* Match End Modal */
+.modal.match-end h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
 .modal.match-end h3 {
   color: green;
+  margin: 10px 0 15px;
 }
 .match-summary {
 }
 .match-summary .title {
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-bottom: 0;
+}
+.match-summary .final-scores {
+  margin-bottom: 15px;
 }
 .match-summary .scores {
   display: flex;
   justify-content: center;
   gap: 100px;
+  margin: 15px 0;
+}
+.match-summary .scores .name {
+  text-transform: capitalize;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+.match-summary .game-summary-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
   margin-bottom: 15px;
 }
 .match-summary .game-summary {
-  margin-bottom: 10px;
+  border: 1px solid #4c769c;
+  border-radius: 3px;
 }
 .match-summary .game-winner {
-  background: #213547;
-  font-size: 14px;
+  background: #4a4375;
+  font-size: 12px;
+  font-weight: 400;
+  padding: 2px 0;
 }
 .match-summary .game-stats {
   display: flex;
   justify-content: center;
-  gap: 15px;
+  gap: 10px;
   font-size: 12px;
-  margin-top: 5px;
+  padding: 5px 0;
 }

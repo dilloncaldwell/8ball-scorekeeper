@@ -1,6 +1,5 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useGame } from '../context/useGame';
-import { useTimer } from '../hooks/useTimer';
 
 const formatTime = (seconds) => {
   const minutes = Math.floor(seconds / 60);
@@ -9,27 +8,14 @@ const formatTime = (seconds) => {
 };
 
 const GameTimer = () => {
-  // const { gameEnded, isTimerRunning, gameTimer, setGameTimer } = useGame();
-  const { isTimerRunning, gameTimer, setGameTimer } = useGame();
+  const { gameTimer } = useGame();
 
-  const handleTick = useCallback(
-    (newTime) => {
-      setGameTimer(newTime);
-    },
-    [setGameTimer]
+  return (
+    <div className="game-timer">
+      Time:
+      <br /> {formatTime(gameTimer)}
+    </div>
   );
-
-  // const [, reset] = useTimer(isTimerRunning, handleTick);
-
-  // useEffect(() => {
-  //   if (gameEnded) {
-  //     reset();
-  //   }
-  // }, [gameEnded, reset]);
-
-  useTimer(isTimerRunning, handleTick);
-
-  return <div className="game-timer">Game Timer: {formatTime(gameTimer)}</div>;
 };
 
 export default GameTimer;
