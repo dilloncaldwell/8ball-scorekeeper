@@ -12,6 +12,14 @@ const GameUI = () => {
   const [showGameOverModal, setShowGameOverModal] = useState(false);
   const [showMatchWinnerModal, setShowMatchWinnerModal] = useState(false);
 
+  const otherPlayer = players[(currentTurn + 1) % 2];
+
+  const getActualPlayerIndex = (turn, breaker) => {
+    // If breakerIndex is 0: turn 0 = player 0
+    // If breakerIndex is 1: turn 0 = player 1
+    return (breaker + turn) % 2;
+  };
+
   const switchTurn = () => {
     const next = currentTurn === 0 ? 1 : 0;
     const actualPlayer = getActualPlayerIndex(currentTurn, breakerIndex);
@@ -38,55 +46,39 @@ const GameUI = () => {
   };
 
   const undoTurn = () => {
-    if (turnHistory.length === 0) return;
+    if (turnHistory.length === 0) return; // exit, no turns to undo
 
-    const updatedHistory = turnHistory.slice(0, -1); // Remove the last turn
-    const previousTurnIndex = updatedHistory.length - 1; // Index of the last turn in the updated history
+    // console.log('breakerIndex at start of undo', breakerIndex);
+    // console.log('currentTurn at start of undo', currentTurn);
+    // console.log('turnHistory when button is pressed', turnHistory);
 
-    // Determine the previous turn based on the updated history
-    const previousTurn = previousTurnIndex >= 0 ? getActualPlayerIndex(previousTurnIndex, breakerIndex) : 0; // Default to player 0 if no history exists
+    // Calculate the previousTurnIndex before modifying turnHistory
+    const previousTurnIndex = turnHistory.length - 1;
+    const previousTurn = previousTurnIndex >= 0 ? turnHistory[previousTurnIndex] : breakerIndex; // Default to breaker if no history exists
 
-    setTurnHistory(updatedHistory);
-    setCurrentTurn(previousTurn);
+    // console.log('previousTurnIndex', previousTurnIndex);
+    // console.log('previousTurn', previousTurn);
+
+    // Create a new updatedHistory by removing the last turn
+    const updatedHistory = turnHistory.slice(0, -1);
+
+    setTurnHistory(updatedHistory); // update turnHistory to updated turnHistory
+    setCurrentTurn(previousTurn); // update currentTurn to the previous player
 
     // Update innings if necessary
-    const prevInningCount = Math.floor(turnHistory.length / 2);
+    const prevInningCount = Math.floor(turnHistory.length - 1);
     const newInningCount = Math.floor(updatedHistory.length / 2);
 
     if (newInningCount < prevInningCount) {
       setCurrentInning(newInningCount);
       setInnings((prev) => prev.slice(0, -1)); // Remove the last inning
-      console.log('↩️ Inning decremented');
+      // console.log('↩️ Inning decremented');
     } else {
-      console.log('⏸️ No inning change');
+      // console.log('⏸️ No inning change');
     }
-  };
-  // const undoTurn = () => {
-  //   if (turnHistory.length === 0) return;
 
-  //   const updatedHistory = turnHistory.slice(0, -1);
-  //   const previousTurn = turnHistory[turnHistory.length - 2] === undefined ? 0 : getActualPlayerIndex(turnHistory[turnHistory.length - 2], breakerIndex) === 0 ? 0 : 1;
-  //   setTurnHistory(updatedHistory);
-  //   setCurrentTurn(previousTurn);
-
-  //   const prevInningCount = Math.floor(turnHistory.length / 2);
-  //   const newInningCount = Math.floor(updatedHistory.length / 2);
-
-  //   if (newInningCount < prevInningCount) {
-  //     setCurrentInning(newInningCount);
-  //     setInnings((prev) => prev.slice(0, -1));
-  //     // console.log('↩️ Inning decremented');
-  //   } else {
-  //     // console.log('⏸️ No inning change');
-  //   }
-  // };
-
-  const otherPlayer = players[(currentTurn + 1) % 2];
-
-  const getActualPlayerIndex = (turn, breaker) => {
-    // If breakerIndex is 0: turn 0 = player 0
-    // If breakerIndex is 1: turn 0 = player 1
-    return (breaker + turn) % 2;
+    // console.log('breakerIndex at end of undo', breakerIndex == 0 ? 'p1 is breaker' : 'p2 is breaker');
+    // console.log('currentTurn at end of undo', previousTurn);
   };
 
   return (
