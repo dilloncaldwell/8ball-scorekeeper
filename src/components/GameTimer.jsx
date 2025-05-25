@@ -14,7 +14,7 @@ const GameTimer = () => {
 
   return (
     <div className="game-timer">
-      <FontAwesomeIcon icon={faClock} />
+      <FontAwesomeIcon icon={faClock} /> Time:&nbsp;
       {formatTime(gameTimer)}
     </div>
   );

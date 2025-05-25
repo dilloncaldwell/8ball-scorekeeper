@@ -97,27 +97,24 @@ const GameUI = () => {
   };
 
   return (
-    <>
+    <div className="gameui-container">
+      <div className="middle-stats">
+        <GameTimer />
+        <InningTracker />
+      </div>
       <div className="ui-header">
         <div className={`p-card ${getActualPlayerIndex(currentTurn, breakerIndex) === 0 ? 'current-player' : ''}`}>
           {breakerIndex === 0 && <span className="break"> Break</span>}
-          <h3>
-            <FontAwesomeIcon icon={faUser} /> {players[0]?.name}
-          </h3>
+          <FontAwesomeIcon icon={faUser} />
+          <h3>{players[0]?.name}</h3>
           <p className="race">
             {players[0]?.score} / {players[0]?.race}
           </p>
         </div>
-        <div className="middle-stats">
-          <GameTimer />
-          <InningTracker />
-        </div>
         <div className={`p-card ${getActualPlayerIndex(currentTurn, breakerIndex) === 1 ? 'current-player' : ''}`}>
           {breakerIndex === 1 && <span className="break"> Break</span>}
-          <h3>
-            <FontAwesomeIcon icon={faUser} />
-            {players[1]?.name}
-          </h3>
+          <FontAwesomeIcon icon={faUser} />
+          <h3>{players[1]?.name}</h3>
           <p className="race">
             {players[1]?.score} / {players[1]?.race}
           </p>
@@ -135,7 +132,7 @@ const GameUI = () => {
       </div>
       {showGameOverModal && <GameEndModal isOpen={showGameOverModal} onClose={() => setShowGameOverModal(false)} onMatchEnd={() => setShowMatchWinnerModal(true)} />}
       {showMatchWinnerModal && <MatchWinnerDisplay isOpen={showMatchWinnerModal} />}
-    </>
+    </div>
   );
 };
 

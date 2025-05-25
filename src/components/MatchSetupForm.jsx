@@ -25,7 +25,7 @@ const MatchSetupForm = () => {
   const isFormValid = player1.trim() && player2.trim() && breaker !== '';
 
   return (
-    <div>
+    <div className="match-setup-form">
       <div className="players-form">
         <div className="p1-form">
           <div>

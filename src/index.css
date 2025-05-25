@@ -33,6 +33,14 @@ body {
   /* background-color: #242424; */
   background: #060728;
 }
+.app-container .gameui-container,
+.app-container .match-setup-form {
+  height: calc(100vh - 106px);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
 h1 {
   font-size: 3.2em;
@@ -97,15 +105,17 @@ h2 {
 label {
   display: block;
   margin-bottom: 5px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
 }
 input,
 select {
-  padding: 5px 10px;
+  padding: 8px 15px;
   border: 1px solid #4c769c;
   border-radius: 3px;
   background: #4a4375;
+  width: 100%;
+  font-size: 18px;
 }
 input::placeholder {
   /* color: #a4c1dc; */
@@ -114,6 +124,18 @@ input::placeholder {
 .input-error {
   border: 1px solid red;
 }
+.p1-form > div:nth-of-type(1) {
+  width: 100%;
+}
+.p1-form > div:nth-of-type(2) {
+  width: 80px;
+}
+.p2-form > div:nth-of-type(1) {
+  width: 100%;
+}
+.p2-form > div:nth-of-type(2) {
+  width: 80px;
+}
 
 /* Game UI */
 .title-bar {
@@ -121,21 +143,26 @@ input::placeholder {
   padding: 10px 0;
   text-align: center;
   font-weight: 700;
-  font-size: 18px;
+  font-size: 24px;
 }
 .ui-header {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 35px;
+  /* display: grid;
+  grid-template-columns: repeat(3, 1fr); */
+  gap: 15px;
   margin-bottom: 25px;
   width: 100%;
+  display: flex;
+  justify-content: space-between;
 }
 .p-card {
-  padding: 20px 20px 20px;
+  padding: 15px 10px 15px;
   border-radius: 5px;
   /* border: 1px solid #213547; */
   border: 2px solid transparent;
   position: relative;
+}
+.p-card:nth-of-type(2) {
+  text-align: right;
 }
 .p-card.current-player {
   /* background: #213547; */
@@ -145,37 +172,44 @@ input::placeholder {
 .p-card .race {
   margin: 0;
 }
-.ui-header .middle-stats {
+.gameui-container .middle-stats {
   text-align: center;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 35px;
+  align-items: center;
+  margin-bottom: 35px;
 }
-.ui-header .middle-stats .game-timer {
+.gameui-container .middle-stats .game-timer {
   font-size: 14px;
 }
-.ui-header .middle-stats .game-timer svg {
-  font-size: 12px;
+.gameui-container .middle-stats .game-timer svg {
+  font-size: 14px;
   margin-right: 5px;
   color: #ac9eee;
 }
-.ui-header .middle-stats .innings {
+.gameui-container .middle-stats .innings {
   font-size: 14px;
-  margin-top: 10px;
 }
-.ui-header .middle-stats .innings svg {
-  font-size: 12px;
+.gameui-container .middle-stats .innings svg {
+  font-size: 14px;
   margin-right: 5px;
   color: #ac9eee;
 }
 .p-card h3 {
   margin: 0 0 10px;
+  font-size: 14px;
   /* position: relative; */
 }
-.p-card h3 svg {
-  font-size: 14px;
+.p-card svg {
+  font-size: 18px;
   margin-right: 5px;
   color: #ac9eee;
+  margin-bottom: 5px;
 }
 .p-card span.break {
-  font-size: 7px;
+  font-size: 10px;
   background: #646cff;
   padding: 3px;
   border-radius: 2px;
@@ -225,7 +259,7 @@ input::placeholder {
   background: #05072b;
   padding: 1.5rem 2rem;
   border-radius: 1rem;
-  width: 80%;
+  width: 90%;
   text-align: center;
 }
 

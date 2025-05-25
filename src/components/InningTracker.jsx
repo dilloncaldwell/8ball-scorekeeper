@@ -10,7 +10,7 @@ const InningTracker = () => {
 
   return (
     <div className="innings">
-      <FontAwesomeIcon icon={faHourglassHalf} />
+      <FontAwesomeIcon icon={faHourglassHalf} /> Innings:&nbsp;
       {innings.length}
     </div>
   );
