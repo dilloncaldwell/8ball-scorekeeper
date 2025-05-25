@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGame } from '../context/useGame';
 
 const GameEndModal = ({ isOpen, onClose, onMatchEnd }) => {
@@ -19,14 +19,22 @@ const GameEndModal = ({ isOpen, onClose, onMatchEnd }) => {
     setGameEnded,
     resetGame,
   } = useGame();
+  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
     // console.log('GameEndModal: isOpen changed to', isOpen);
     if (isOpen) {
+      setTimeout(() => {
+        setIsActive(true);
+      }, 10);
       // console.log('GameEndModal: Pausing timer');
       pauseGameTimer(); // Pause the timer when modal opens
+    } else {
+      setIsActive(false);
+      // Wait for animation to complete before unmounting
+      setTimeout(() => onClose(), 300);
     }
-  }, [isOpen, pauseGameTimer]);
+  }, [isOpen, pauseGameTimer, onClose]);
 
   // Handle cancel - resume timer from where it was paused
   const handleCancel = () => {
@@ -85,8 +93,8 @@ const GameEndModal = ({ isOpen, onClose, onMatchEnd }) => {
   const currentDisplayPlayer = players[getActualPlayerIndex(currentTurn, breakerIndex)];
 
   return (
-    <div className="modal-overlay">
-      <div className="modal">
+    <div className={`modal-overlay ${isActive ? 'active' : ''}`}>
+      <div className={`modal ${isActive ? 'active' : ''}`}>
         <h2>Who Won?</h2>
         <div className="modal-buttons">
           <h3>✅ {currentDisplayPlayer?.name} Wins</h3>
@@ -98,7 +106,9 @@ const GameEndModal = ({ isOpen, onClose, onMatchEnd }) => {
           <button onClick={() => onDeclareWinner(false)}>Scratched on 8 Ball</button>
           <button onClick={() => onDeclareWinner(false)}>Made 8 Early</button>
           <br />
-          <button onClick={handleCancel}>Cancel</button>
+          <button className="cancel" onClick={handleCancel}>
+            Cancel
+          </button>
         </div>
       </div>
     </div>

@@ -16,6 +16,16 @@ const GameUI = () => {
 
   const otherPlayer = players[(currentTurn + 1) % 2];
 
+  const handleCloseGameOverModal = () => {
+    setShowGameOverModal(false);
+    // Wait for animation to complete
+    setTimeout(() => {
+      if (showMatchWinnerModal) {
+        setShowMatchWinnerModal(false);
+      }
+    }, 300);
+  };
+
   const getActualPlayerIndex = (turn, breaker) => {
     // If breakerIndex is 0: turn 0 = player 0
     // If breakerIndex is 1: turn 0 = player 1
@@ -131,7 +141,9 @@ const GameUI = () => {
           Reset Match
         </button>
       </div>
-      {showGameOverModal && <GameEndModal isOpen={showGameOverModal} onClose={() => setShowGameOverModal(false)} onMatchEnd={() => setShowMatchWinnerModal(true)} />}
+      {/* {showGameOverModal && <GameEndModal isOpen={showGameOverModal} onClose={() => setShowGameOverModal(false)} onMatchEnd={() => setShowMatchWinnerModal(true)} />}
+      {showMatchWinnerModal && <MatchWinnerDisplay isOpen={showMatchWinnerModal} />} */}
+      {showGameOverModal && <GameEndModal isOpen={showGameOverModal} onClose={handleCloseGameOverModal} onMatchEnd={() => setShowMatchWinnerModal(true)} />}
       {showMatchWinnerModal && <MatchWinnerDisplay isOpen={showMatchWinnerModal} />}
     </div>
   );

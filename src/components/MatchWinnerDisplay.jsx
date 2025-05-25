@@ -1,10 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { GameContext } from '../context/GameContext';
 import { useGame } from '../context/useGame';
 
 const MatchWinnerDisplay = ({ isOpen }) => {
   const { matchHistory, players, totalMatchTime } = useGame();
   const { resetMatch } = useContext(GameContext);
+  const [isActive, setIsActive] = useState(false);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -12,13 +13,19 @@ const MatchWinnerDisplay = ({ isOpen }) => {
     return `${minutes}:${String(remainingSeconds).padStart(2, '0')}`;
   };
 
+  useEffect(() => {
+    if (isOpen) {
+      setIsActive(true);
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const winner = matchHistory[matchHistory.length - 1]?.winner;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal match-end">
+    <div className={`modal-overlay ${isActive ? 'active' : ''}`}>
+      <div className={`modal match-end ${isActive ? 'active' : ''}`}>
         <h2>Match Summary</h2>
         <div className="match-summary">
           <h3>{winner} wins! 🎉</h3>

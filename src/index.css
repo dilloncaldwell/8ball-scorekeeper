@@ -2,11 +2,7 @@
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  /* background-color: #242424; */
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -23,14 +19,8 @@ a:hover {
 }
 
 body {
-  /* margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh; */
   margin: 0;
   padding: 0;
-  /* background-color: #242424; */
   background: #060728;
 }
 .app-container .gameui-container,
@@ -54,7 +44,6 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  /* background-color: #1a1a1a; */
   cursor: pointer;
   transition: border-color 0.25s;
   background: #3f44a1;
@@ -65,6 +54,7 @@ button.gameover {
 }
 .gameui-container button.reset {
   margin-top: 35px;
+  background: #271076;
 }
 button:hover {
   border-color: #646cff;
@@ -74,9 +64,8 @@ button:focus-visible {
   outline: 4px auto #646cff;
 }
 button:disabled {
-  /* background-color: light-dark(rgba(239, 239, 239, 0.3), rgba(19, 1, 1, 0.3)); */
-  color: light-dark(rgba(16, 16, 16, 0.3), rgba(255, 255, 255, 0.3));
-  /* border-color: light-dark(rgba(118, 118, 118, 0.3), rgba(195, 195, 195, 0.3)); */
+  /* color: light-dark(rgba(16, 16, 16, 0.3), rgba(255, 255, 255, 0.3)); */
+  color: rgba(255, 255, 255, 0.3);
   background: rgba(63, 68, 161, 0.3);
   cursor: not-allowed;
 }
@@ -122,10 +111,10 @@ select {
   background: #4a4375;
   width: 100%;
   font-size: 18px;
+  color: #fff;
 }
 input::placeholder {
-  /* color: #a4c1dc; */
-  color: #fff;
+  color: rgba(255, 255, 255, 0.7);
 }
 .input-error {
   border: 1px solid red;
@@ -152,8 +141,6 @@ input::placeholder {
   font-size: 24px;
 }
 .ui-header {
-  /* display: grid;
-  grid-template-columns: repeat(3, 1fr); */
   gap: 15px;
   margin-bottom: 25px;
   width: 100%;
@@ -163,8 +150,7 @@ input::placeholder {
 .p-card {
   padding: 15px 10px 15px;
   border-radius: 5px;
-  /* border: 1px solid #213547; */
-  border: 2px solid transparent;
+  border: 2px solid #24286a;
   position: relative;
   min-width: 120px;
 }
@@ -172,8 +158,7 @@ input::placeholder {
   text-align: right;
 }
 .p-card.current-player {
-  /* background: #213547; */
-  background: #150e2f;
+  background: #241152;
   border: 2px solid #646cff;
 }
 .p-card .race {
@@ -207,7 +192,6 @@ input::placeholder {
 .p-card h3 {
   margin: 0 0 10px;
   font-size: 14px;
-  /* position: relative; */
 }
 .p-card svg {
   font-size: 18px;
@@ -221,7 +205,6 @@ input::placeholder {
   padding: 3px;
   border-radius: 2px;
   display: inline-block;
-  /* margin-left: 10px; */
   vertical-align: middle;
   position: absolute;
   top: 0;
@@ -252,28 +235,51 @@ input::placeholder {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
-
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
 .modal {
-  /* background: #242424; */
   background: #05072b;
   padding: 1.5rem 2rem;
   border-radius: 1rem;
   width: 90%;
   text-align: center;
+  transform: scale(0.7);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.modal.active {
+  transform: scale(1);
+  opacity: 1;
+}
+.modal h2 {
+  margin: 0 0 10px;
+  font-size: 20px;
+}
+.modal h3 {
+  margin: 15px 0 10px;
+  font-size: 16px;
 }
 
 .modal-buttons button {
   display: block;
   width: 100%;
-  margin: 0.5rem 0;
+  margin: 0.7rem 0;
+}
+.modal-buttons button.cancel {
+  background: #76102a;
 }
 
 /* Match End Modal */
@@ -284,8 +290,6 @@ input::placeholder {
 .modal.match-end h3 {
   color: green;
   margin: 10px 0 15px;
-}
-.match-summary {
 }
 .match-summary .title {
   font-weight: 700;
