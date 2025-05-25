@@ -7,7 +7,8 @@ const MatchSetupForm = () => {
   const [player2, setPlayer2] = useState('');
   const [race1, setRace1] = useState(5);
   const [race2, setRace2] = useState(5);
-  const [breaker, setBreaker] = useState(0);
+  // const [breaker, setBreaker] = useState(0);
+  const [breaker, setBreaker] = useState('');
 
   const startMatch = () => {
     setPlayers([
@@ -20,11 +21,11 @@ const MatchSetupForm = () => {
     setTurnHistory([]);
   };
 
-  const isFormValid = player1.trim() && player2.trim();
+  // const isFormValid = player1.trim() && player2.trim();
+  const isFormValid = player1.trim() && player2.trim() && breaker !== '';
 
   return (
     <div>
-      <h2>8 Ball Score Keeper</h2>
       <div className="players-form">
         <div className="p1-form">
           <div>
@@ -50,6 +51,9 @@ const MatchSetupForm = () => {
       <div className="who-breaks">
         <label>Who breaks first?</label>
         <select value={breaker} onChange={(e) => setBreaker(parseInt(e.target.value, 10))}>
+          <option value="" disabled>
+            -- Select Player --
+          </option>
           <option value={0}>{player1.trim() || 'Player 1'}</option>
           <option value={1}>{player2.trim() || 'Player 2'}</option>
         </select>

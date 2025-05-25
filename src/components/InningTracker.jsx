@@ -1,3 +1,5 @@
+import { faHourglassHalf } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useContext } from 'react';
 import { GameContext } from '../context/GameContext';
 
@@ -8,8 +10,8 @@ const InningTracker = () => {
 
   return (
     <div className="innings">
-      Innings:
-      <br /> {innings.length}
+      <FontAwesomeIcon icon={faHourglassHalf} />
+      {innings.length}
     </div>
   );
 };

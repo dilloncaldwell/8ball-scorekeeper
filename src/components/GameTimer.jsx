@@ -1,3 +1,5 @@
+import { faClock } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { useGame } from '../context/useGame';
 
@@ -12,8 +14,8 @@ const GameTimer = () => {
 
   return (
     <div className="game-timer">
-      Time:
-      <br /> {formatTime(gameTimer)}
+      <FontAwesomeIcon icon={faClock} />
+      {formatTime(gameTimer)}
     </div>
   );
 };

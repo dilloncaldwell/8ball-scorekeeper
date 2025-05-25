@@ -7,7 +7,12 @@ import { useGame } from './context/useGame';
 const App = () => {
   const { gameStarted } = useGame();
 
-  return <div className="app-container">{!gameStarted ? <MatchSetupForm /> : <GameUI />}</div>;
+  return (
+    <>
+      <div className="title-bar">8 Ball Scorekeeper</div>
+      <div className="app-container">{!gameStarted ? <MatchSetupForm /> : <GameUI />}</div>
+    </>
+  );
 };
 
 export default App;
