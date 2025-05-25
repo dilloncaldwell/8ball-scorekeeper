@@ -1,9 +1,0 @@
-{
-  "name": "8 Ball Score Keeper",
-  "short_name": "8Ball Score",
-  "display": "standalone",
-  "orientation": "portrait",
-  "start_url": "/",
-  "theme_color": "#05072b",
-  "background_color": "#05072b"
-}
