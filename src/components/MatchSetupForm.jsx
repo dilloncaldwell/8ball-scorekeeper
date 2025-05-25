@@ -7,7 +7,6 @@ const MatchSetupForm = () => {
   const [player2, setPlayer2] = useState('');
   const [race1, setRace1] = useState(5);
   const [race2, setRace2] = useState(5);
-  // const [breaker, setBreaker] = useState(0);
   const [breaker, setBreaker] = useState('');
 
   const startMatch = () => {
@@ -21,7 +20,6 @@ const MatchSetupForm = () => {
     setTurnHistory([]);
   };
 
-  // const isFormValid = player1.trim() && player2.trim();
   const isFormValid = player1.trim() && player2.trim() && breaker !== '';
 
   return (
@@ -34,7 +32,7 @@ const MatchSetupForm = () => {
           </div>
           <div>
             <label>Race:</label>
-            <input type="number" placeholder="Race" value={race1} onChange={(e) => setRace1(e.target.value)} />
+            <input type="number" value={race1} onChange={(e) => setRace1(e.target.value)} />
           </div>
         </div>
         <div className="p2-form">
@@ -44,7 +42,7 @@ const MatchSetupForm = () => {
           </div>
           <div>
             <label>Race:</label>
-            <input type="number" placeholder="Race" value={race2} onChange={(e) => setRace2(e.target.value)} />
+            <input type="number" value={race2} onChange={(e) => setRace2(e.target.value)} />
           </div>
         </div>
       </div>

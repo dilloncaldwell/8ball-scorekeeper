@@ -25,7 +25,8 @@ body {
 }
 .app-container .gameui-container,
 .app-container .match-setup-form {
-  height: calc(100vh - 106px);
+  /* 108 is titlebar height plus top/bottom padding from container */
+  height: calc(100vh - 108px);
   width: 100%;
   display: flex;
   flex-direction: column;
