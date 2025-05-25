@@ -63,6 +63,9 @@ button {
 button.gameover {
   background: #76102a;
 }
+.gameui-container button.reset {
+  margin-top: 35px;
+}
 button:hover {
   border-color: #646cff;
 }
@@ -76,6 +79,9 @@ button:disabled {
   /* border-color: light-dark(rgba(118, 118, 118, 0.3), rgba(195, 195, 195, 0.3)); */
   background: rgba(63, 68, 161, 0.3);
   cursor: not-allowed;
+}
+.gameui-container button {
+  font-size: 18px;
 }
 button:disabled:hover {
   border-color: transparent;
@@ -160,6 +166,7 @@ input::placeholder {
   /* border: 1px solid #213547; */
   border: 2px solid transparent;
   position: relative;
+  min-width: 120px;
 }
 .p-card:nth-of-type(2) {
   text-align: right;
@@ -232,7 +239,7 @@ input::placeholder {
 .btn-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
   width: 100%;
   margin-top: 25px;
 }
