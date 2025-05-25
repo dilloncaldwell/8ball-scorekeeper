@@ -33,13 +33,13 @@ const GameUI = () => {
     const effectiveInning = Math.floor(turnIndex / 2);
     const inningShouldIncrement = turnIndex % 2 === 0;
 
-    console.log('Switch turn:', {
-      previousHistory: turnHistory,
-      updatedHistory,
-      actualPlayer,
-      turnIndex,
-      effectiveInning,
-    });
+    // console.log('Switch turn:', {
+    //   previousHistory: turnHistory,
+    //   updatedHistory,
+    //   actualPlayer,
+    //   turnIndex,
+    //   effectiveInning,
+    // });
 
     if (inningShouldIncrement && effectiveInning >= 0) {
       setCurrentInning(effectiveInning);
@@ -74,16 +74,16 @@ const GameUI = () => {
     const turnIndex = updatedHistory.length;
     const effectiveInning = Math.floor(turnIndex / 2);
 
-    console.log('Undo Turn:', {
-      previousHistory: turnHistory,
-      updatedHistory,
-      previousTurn: prev,
-      turnIndex,
-      effectiveInning,
-      isCompletingInning,
-      hasCompleteInning,
-      shouldDecrementInning,
-    });
+    // console.log('Undo Turn:', {
+    //   previousHistory: turnHistory,
+    //   updatedHistory,
+    //   previousTurn: prev,
+    //   turnIndex,
+    //   effectiveInning,
+    //   isCompletingInning,
+    //   hasCompleteInning,
+    //   shouldDecrementInning,
+    // });
 
     // Update state
     setTurnHistory(updatedHistory);

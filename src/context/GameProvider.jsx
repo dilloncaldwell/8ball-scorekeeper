@@ -19,53 +19,53 @@ export const GameProvider = ({ children }) => {
   const [gameEnded, setGameEnded] = useState(saved?.gameEnded || false);
   const [innings, setInnings] = useState(saved?.innings || []);
   const [currentInning, setCurrentInning] = useState(saved?.currentInning || 0);
-  const [gameTimer, setGameTimer] = useState(0);
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [intervalId, setIntervalId] = useState(null);
+  // const [gameTimer, setGameTimer] = useState(0);
+  // const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [gameTimer, setGameTimer] = useState(saved?.gameTimer || 0);
+  const [isTimerRunning, setIsTimerRunning] = useState(saved?.isTimerRunning || false);
+  // const [intervalId, setIntervalId] = useState(null);
   const [totalMatchTime, setTotalMatchTime] = useState(0);
   const [matchHistory, setMatchHistory] = useState(saved?.matchHistory || []);
   const [turnHistory, setTurnHistory] = useState(saved?.turnHistory || []);
 
   const startGameTimer = useCallback(() => {
-    if (!isTimerRunning) {
-      // console.log('startGameTimer called');
-      setIsTimerRunning(true);
-      // Clear any existing interval before starting a new one
-      if (intervalId) {
-        clearInterval(intervalId);
-      }
-      const id = setInterval(() => {
-        setGameTimer((prev) => prev + 1);
-      }, 1000);
-      setIntervalId(id);
-    }
-  }, [isTimerRunning, intervalId]);
+    setIsTimerRunning(true);
+  }, []);
 
-  const pauseGameTimer = () => {
-    if (isTimerRunning) {
-      // console.log('pauseGameTimer called');
-      setIsTimerRunning(false);
-      if (intervalId) {
-        clearInterval(intervalId);
-        setIntervalId(null);
-      }
-    }
-  };
+  const pauseGameTimer = useCallback(() => {
+    setIsTimerRunning(false);
+  }, []);
 
-  const resetGameTimer = () => {
-    pauseGameTimer();
+  const resetGameTimer = useCallback(() => {
+    setIsTimerRunning(false);
     setGameTimer(0);
-  };
+  }, []);
 
   useEffect(() => {
+    let interval = null;
+
+    if (isTimerRunning) {
+      interval = setInterval(() => {
+        setGameTimer((prev) => prev + 1);
+      }, 1000);
+    }
+
     return () => {
-      // Cleanup interval on unmount
-      if (intervalId) {
-        // console.log('Cleaning up interval on unmount');
-        clearInterval(intervalId);
+      if (interval) {
+        clearInterval(interval);
       }
     };
-  }, [intervalId]);
+  }, [isTimerRunning]);
+
+  // useEffect(() => {
+  //   return () => {
+  //     // Cleanup interval on unmount
+  //     if (intervalId) {
+  //       // console.log('Cleaning up interval on unmount');
+  //       clearInterval(intervalId);
+  //     }
+  //   };
+  // }, [intervalId]);
 
   useEffect(() => {
     const state = {
@@ -78,15 +78,20 @@ export const GameProvider = ({ children }) => {
       currentInning,
       matchHistory,
       turnHistory,
+      gameTimer,
+      isTimerRunning,
     };
     localStorage.setItem('8ball-game-state', JSON.stringify(state));
-  }, [players, breakerIndex, currentTurn, gameStarted, gameEnded, innings, currentInning, matchHistory, turnHistory]);
+  }, [players, breakerIndex, currentTurn, gameStarted, gameEnded, innings, currentInning, matchHistory, turnHistory, gameTimer, isTimerRunning]);
 
   const resetGame = () => {
     setCurrentTurn(0);
     setInnings([]);
     setCurrentInning(0);
     setTurnHistory([]);
+    setGameTimer(0);
+    setIsTimerRunning(false);
+    localStorage.removeItem('8ball-game-state');
   };
 
   const resetMatch = () => {
