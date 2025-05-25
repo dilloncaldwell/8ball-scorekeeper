@@ -24,6 +24,7 @@ export const GameProvider = ({ children }) => {
   const [totalMatchTime, setTotalMatchTime] = useState(0);
   const [matchHistory, setMatchHistory] = useState(saved?.matchHistory || []);
   const [turnHistory, setTurnHistory] = useState(saved?.turnHistory || []);
+  const [showMatchWinnerModal, setShowMatchWinnerModal] = useState(saved?.showMatchWinnerModal || false);
 
   const startGameTimer = useCallback(() => {
     setIsTimerRunning(true);
@@ -65,9 +66,10 @@ export const GameProvider = ({ children }) => {
       turnHistory,
       gameTimer,
       isTimerRunning,
+      showMatchWinnerModal,
     };
     localStorage.setItem('8ball-game-state', JSON.stringify(state));
-  }, [players, breakerIndex, currentTurn, gameStarted, gameEnded, innings, currentInning, matchHistory, turnHistory, gameTimer, isTimerRunning]);
+  }, [players, breakerIndex, currentTurn, gameStarted, gameEnded, innings, currentInning, matchHistory, turnHistory, gameTimer, isTimerRunning, showMatchWinnerModal]);
 
   const resetGame = () => {
     setCurrentTurn(0);
@@ -91,6 +93,7 @@ export const GameProvider = ({ children }) => {
     setTotalMatchTime(0);
     setIsTimerRunning(false);
     setGameTimer(0);
+    setShowMatchWinnerModal(false);
     setMatchHistory([]);
     localStorage.removeItem('8ball-game-state');
   };
@@ -126,6 +129,8 @@ export const GameProvider = ({ children }) => {
         setTurnHistory,
         resetMatch,
         resetGame,
+        showMatchWinnerModal,
+        setShowMatchWinnerModal,
       }}
     >
       {children}
