@@ -19,11 +19,8 @@ export const GameProvider = ({ children }) => {
   const [gameEnded, setGameEnded] = useState(saved?.gameEnded || false);
   const [innings, setInnings] = useState(saved?.innings || []);
   const [currentInning, setCurrentInning] = useState(saved?.currentInning || 0);
-  // const [gameTimer, setGameTimer] = useState(0);
-  // const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [gameTimer, setGameTimer] = useState(saved?.gameTimer || 0);
   const [isTimerRunning, setIsTimerRunning] = useState(saved?.isTimerRunning || false);
-  // const [intervalId, setIntervalId] = useState(null);
   const [totalMatchTime, setTotalMatchTime] = useState(0);
   const [matchHistory, setMatchHistory] = useState(saved?.matchHistory || []);
   const [turnHistory, setTurnHistory] = useState(saved?.turnHistory || []);
@@ -43,29 +40,17 @@ export const GameProvider = ({ children }) => {
 
   useEffect(() => {
     let interval = null;
-
     if (isTimerRunning) {
       interval = setInterval(() => {
         setGameTimer((prev) => prev + 1);
       }, 1000);
     }
-
     return () => {
       if (interval) {
         clearInterval(interval);
       }
     };
   }, [isTimerRunning]);
-
-  // useEffect(() => {
-  //   return () => {
-  //     // Cleanup interval on unmount
-  //     if (intervalId) {
-  //       // console.log('Cleaning up interval on unmount');
-  //       clearInterval(intervalId);
-  //     }
-  //   };
-  // }, [intervalId]);
 
   useEffect(() => {
     const state = {
